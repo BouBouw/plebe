@@ -31,7 +31,7 @@ client.on('ready', async () => {
     require('./handler')(client);
 
     const ready = require('./events/client/ready.js');
-    await ready.exectue(client);
+    await ready.execute(client);
 })
 
 client.login(config.token)

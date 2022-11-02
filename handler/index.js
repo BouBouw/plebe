@@ -9,7 +9,7 @@ module.exports = (client) => {
     // # slashCommands
     const arrayOfSlashCommands = [];
 
-    const loadSlashCommands = (dir = "./slashCommands/") => {
+    const loadSlashCommands = (dir = "./commands/") => {
         readdirSync(dir).forEach(dirs => {
             const commands = readdirSync(`${dir}/${dirs}/`).filter(files => files.endsWith(".js"));
 
