@@ -2,7 +2,7 @@ const { ApplicationCommandType, ApplicationCommandOptionType, PermissionsBitFiel
 
 module.exports = {
     name: 'clear',
-    description: '(⚙️) Modération',
+    description: '(⛔) Modération',
     type: ApplicationCommandType.ChatInput,
     options: [
         {

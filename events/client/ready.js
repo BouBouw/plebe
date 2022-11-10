@@ -5,6 +5,8 @@ module.exports = {
 	name: 'ready',
 	once: false,
 execute: async (client) => {
+    await clearCustomChannels();
+
     console.log('[!]'.bold.green + ' Connecté à Discord.'.bold.white);
 
     client.user.setPresence({
@@ -16,5 +18,11 @@ execute: async (client) => {
         ],
         status: "idle"
     })
+
+    async function clearCustomChannels() {
+        const guild = client.guilds.cache.get('1037033375581614113');
+        const category = guild.channels.cache.get('1037470916462002259');
+
+    }
     }
 }

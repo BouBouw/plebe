@@ -3,7 +3,7 @@ const ms = require('ms');
 
 module.exports = {
     name: 'mute',
-    description: '(⚙️) Moderation',
+    description: '(⛔) Moderation',
     type: ApplicationCommandType.ChatInput,
     options: [
         {
