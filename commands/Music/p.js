@@ -26,7 +26,7 @@ execute: async (client, interaction, args) => {
     const { channel } = interaction.member.voice;
     if(!channel) return interaction.followUp({ content: `❓ • ${interaction.member} vous devez être dans un salon vocal.` });
 
-    // if(serverQueue && channel !== interaction.guild.voice.channel) return interaction.followUp({ content: `:x: • ${interaction.member}, je suis déjà en train de jouer dans un autre salon.` })
+    if(serverQueue && serverQueue.connection.joinConfig.channelId !== interaction.member.voice.channelId) return interaction.followUp({ content: `:x: • ${interaction.member}, je suis déjà en train de jouer dans un autre salon.` })
 
     const videoPattern = /^(https?:\/\/)?(www\.)?(m\.)?(youtube\.com|youtu\.?be)\/.+$/gi;
     const playlistPattern = /^.*(list=)([^#\&\?]*).*/gi;

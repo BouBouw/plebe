@@ -11,6 +11,9 @@ module.exports = {
     type: ApplicationCommandType.ChatInput,
 execute: async (client, interaction, args) => {
     const serverQueue = interaction.client.queue.get(interaction.guild.id);
+
+    if(serverQueue && serverQueue.connection.joinConfig.channelId !== interaction.member.voice.channelId) return interaction.followUp({ content: `:x: • ${interaction.member}, je suis déjà en train de jouer dans un autre salon.` })
+
     if(!serverQueue.songs[1]) return interaction.followUp({ content: `Aucune autre musique après celle-ci.` })
 
     const streamOptions = { seek: 0, volume: 1, filter : 'audioonly' };
