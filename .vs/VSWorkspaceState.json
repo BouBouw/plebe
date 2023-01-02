@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\commands",
+    "\\commands\\Admin",
+    "\\commands\\Mods",
+    "\\commands\\Music",
+    "\\commands\\Utils",
+    "\\events",
+    "\\events\\client",
+    "\\events\\guilds",
+    "\\events\\users"
+  ],
+  "PreviewInSolutionExplorer": false
+}
