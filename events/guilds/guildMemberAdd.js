@@ -1,3 +1,4 @@
+const { Colors } = require('discord.js');
 const db = require('quick.db');
 
 module.exports = {
@@ -29,6 +30,23 @@ execute: async (member, client) => {
             })
         }
     }
+
+    function Logs() {
+        const c = client.channels.cache.get('1076016934669258803');
+        c.send({
+            embeds: [{
+                color: Colors.Green,
+                title: `Acceuil > Arrivé`,
+                fields: [
+                    {
+                        name: `${member.user.tag}`,
+                        value: `Cet utilisateur vient de rejoindre le serveur.`
+                    }
+                ]
+            }]
+        })
+    }
+    Logs();
 
     }
 }

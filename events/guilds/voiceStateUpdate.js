@@ -1,20 +1,72 @@
-const { ChannelType, PermissionsBitField } = require("discord.js");
+const { ChannelType, PermissionsBitField, Colors } = require("discord.js");
 const db = require('quick.db');
 
 module.exports = {
 	name: 'voiceStateUpdate',
 	once: false,
 execute: async (oldState, newState, client) => {
+    const channel = await client.channels.cache.get('1076016934669258803');
+
     if(!newState.channel) {
-        const voicesList = db.get(`client_${client.user.id}_voiceList`)
-        if(!voicesList) {
+        channel.send({
+            embeds: [{
+                color: Colors.Red,
+                title: `Vocal > Déconnexion`,
+                fields: [
+                    {
+                        name: `${oldState.member.user.tag}`,
+                        value: `Cet utilisateur vient de ce déconnecter du salon ${oldState.channel}.`
+                    }
+                ]
+            }]
+        }).then(async () => {
+            // save disconnect date
+        })
+
+        const voicesList = db.get(`client_${client.user.id}_voiceList`);
+        console.log(oldState.channel.id);
+        if(!voicesList || voicesList === null) {
             return;
         } else {
-            if(voicesList.includes(oldState.channel.id)) {
-                const filtered = voicesList.filter(id => id !== oldState.channel.id);
-                db.set(`client_${client.user.id}_voiceList`, filtered)
-                if(oldState.channel.members.size <= 0) await oldState.channel.delete()
+            if(oldState.channel.members.size <= 0) {
+                if(voicesList.includes(oldState.channel.id)) {
+                    const filtered = voicesList.filter(id => id !== oldState.channel.id);
+                    db.set(`client_${client.user.id}_voiceList`, filtered)
+                    await oldState.channel.delete();
+                }
             }
+        }
+    }
+
+    if(newState.channel) {
+        if(oldState.channel && newState.channel) {
+            channel.send({
+                embeds: [{
+                    color: Colors.Orange,
+                    title: `Vocal > Déplacement`,
+                    fields: [
+                        {
+                            name: `${newState.member.user.tag}`,
+                            value: `Cet utilisateur vient de ce déplacer du salon ${oldState.channel} à ${newState.channel}.`
+                        }
+                    ]
+                }]
+            })
+        } else {
+            channel.send({
+                embeds: [{
+                    color: Colors.Green,
+                    title: `Vocal > Connexion`,
+                    fields: [
+                        {
+                            name: `${newState.member.user.tag}`,
+                            value: `Cet utilisateur vient de ce connecter au salon ${newState.channel}.`
+                        }
+                    ]
+                }]
+            }).then(async () => {
+                // save conection date
+            })
         }
     }
 

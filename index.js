@@ -34,6 +34,9 @@ client.on('ready', async () => {
 
     const ready = require('./events/client/ready.js');
     await ready.execute(client);
+
+    const ready_1 = require('./events/guilds/ready.js');
+    await ready_1.execute(client);
 })
 
 client.login(config.token)

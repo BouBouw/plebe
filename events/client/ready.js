@@ -5,7 +5,15 @@ module.exports = {
 	name: 'ready',
 	once: false,
 execute: async (client) => {
-    await clearCustomChannels();
+    client.channels.cache.get('964309725757980705').send({
+        content: `\`[📡]\` Les interférences m'ont fait perdre signal avec les satellites de Discord. **Merci de patienter...**`
+    }).then(async (msg) => {
+        setTimeout(async () => {
+            msg.edit({
+                content: `\`[📡]\` L'antenne détecte à nouveau les satellites de Discord. **Je suis à nouveau opérationnel !**`
+            })
+        }, 10000)
+    })
 
     console.log('[!]'.bold.green + ' Connecté à Discord.'.bold.white);
 
@@ -18,11 +26,5 @@ execute: async (client) => {
         ],
         status: "idle"
     })
-
-    async function clearCustomChannels() {
-        const guild = client.guilds.cache.get('1037033375581614113');
-        const category = guild.channels.cache.get('1037470916462002259');
-
-    }
     }
 }
