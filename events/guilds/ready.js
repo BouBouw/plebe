@@ -8,6 +8,7 @@ execute: async (client) => {
     await initXP();
 
     await EconomySystem();
+    await rainbowRole();
 
     async function initXP() {
         client.users.cache.forEach(async (user) => {
@@ -27,6 +28,16 @@ execute: async (client) => {
     }
 
     async function EconomySystem() {
+        async function initRessources() {
+            const guild = client.guilds.cache.get('964309725757980702');
+            
+            guild.members.cache.forEach(async (target) => {
+                let ressources = await db.get(`guild_${guild.id}_${target.user.id}.ressources`);
+                if(!ressources || ressources == null) await db.set(`guild_${guild.id}_${target.user.id}.ressources`, ['0', '0', '0']); 
+            })
+        }
+        initRessources();
+
         const channel = client.channels.cache.get('964309725757980705');
 
         function getTime() {
@@ -69,7 +80,10 @@ execute: async (client) => {
                 };
 
                 let code = `${random()}`;
+
                 let golds = Math.floor(Math.random() * (650 - 50 + 1) + 1);
+                let woods = Math.floor(Math.random() * (300 - 50 + 1) + 1);
+                let rocks = Math.floor(Math.random() * (300 - 50 + 1) + 1);
 
                 const row_0 = new ActionRowBuilder()
                 .addComponents(
@@ -92,6 +106,14 @@ execute: async (client) => {
                             {
                                 name: `🪙 Pièces d'or`,
                                 value: `${golds}`
+                            },
+                            {
+                                name: `🪵 Planches de bois`,
+                                value: `${woods}`
+                            },
+                            {
+                                name: `🪨 Chutes de pierres`,
+                                value: `${rocks}`
                             }
                         ]
                     }],
@@ -105,7 +127,22 @@ execute: async (client) => {
                 }
             })
             getTime();
-        }, timing) // Constante timing pour définir le temps de l'interval
+        }, timing)
+    }
+
+    async function rainbowRole() {
+        const guild = client.guilds.cache.get('964309725757980702');
+        const role = guild.roles.cache.get('1076555488675774586');
+        if(!role) return;
+
+        setInterval(async () => {
+            const array = ['#ffffff', '#66ffff', '#00ff00', '#ffff66', '#ff9933', '#ff6666', '#ff99cc', '#cc99ff', '#3399ff', '#00ffff', '#ffcc00', '#ff0000', '#0000ff', '#00ff99', '#ffffff'];
+            const random = Math.floor(Math.random() * array.length);
+            
+            await role.edit({
+                color: `${array[random]}`
+            })
+        }, 60000)
     }
 
     }

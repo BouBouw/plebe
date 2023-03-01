@@ -1,3 +1,5 @@
+const { Colors } = require("discord.js");
+
 module.exports = {
 	name: 'guildMemberRemove',
 	once: false,
@@ -10,7 +12,7 @@ execute: async (member, client) => {
     })
 
     function Logs() {
-        const c = client.channels.cache.get('1076016934669258803');
+        const c = client.channels.cache.get('1076344859369148436');
         c.send({
             embeds: [{
                 color: Colors.Red,

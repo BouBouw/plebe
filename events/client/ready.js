@@ -5,15 +5,19 @@ module.exports = {
 	name: 'ready',
 	once: false,
 execute: async (client) => {
-    client.channels.cache.get('964309725757980705').send({
-        content: `\`[📡]\` Les interférences m'ont fait perdre signal avec les satellites de Discord. **Merci de patienter...**`
-    }).then(async (msg) => {
-        setTimeout(async () => {
-            msg.edit({
-                content: `\`[📡]\` L'antenne détecte à nouveau les satellites de Discord. **Je suis à nouveau opérationnel !**`
-            })
-        }, 10000)
-    })
+    // await sendMessageDiscord();
+
+    async function sendMessageDiscord() {
+        client.channels.cache.get('964309725757980705').send({
+            content: `\`[📡]\` Les interférences m'ont fait perdre signal avec les satellites de Discord. **Merci de patienter...**`
+        }).then(async (msg) => {
+            setTimeout(async () => {
+                msg.edit({
+                    content: `\`[📡]\` L'antenne détecte à nouveau les satellites de Discord. **Je suis à nouveau opérationnel !**`
+                })
+            }, 10000)
+        }).catch(() => { return; })
+    }
 
     console.log('[!]'.bold.green + ' Connecté à Discord.'.bold.white);
 

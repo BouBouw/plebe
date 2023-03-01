@@ -7,7 +7,10 @@ module.exports = {
 execute: async (member, client) => {
     const channel = client.channels.cache.get('1040345093812539403');
     if(!channel) return;
-    ScanRaid();
+
+    await ScanRaid();
+
+    await AventureTips();
 
     async function ScanRaid() {
         const state = db.get(`client_${client.user.id}_packages.raid`);
@@ -32,7 +35,7 @@ execute: async (member, client) => {
     }
 
     function Logs() {
-        const c = client.channels.cache.get('1076016934669258803');
+        const c = client.channels.cache.get('1076344859369148436');
         c.send({
             embeds: [{
                 color: Colors.Green,
@@ -47,6 +50,29 @@ execute: async (member, client) => {
         })
     }
     Logs();
+
+    async function AventureTips() {
+        try {
+            const user = client.users.cache.get(member.id);
+
+            user.send({
+                content: `${member}`,
+                embeds: [{
+                    color: Colors.Gold,
+                    title: `${member.guild.name} > Aventure :`,
+                    description: `Bonjour et **bienvenue** sur ${member.guild.name} ! 👋\n> Je suis un **__message automatique__** afin de vous expliquer le module \`aventure\` du serveur.`,
+                    fields: [
+                        {
+                            name: `F.A.Q :`,
+                            value: `**1. Qu'est ce que l'aventure ?**\n> L'aventure est un module afin de rajouter une économie au serveur et ainsi ajouter de l'activité. C'est un jeu unique au serveur développer par la modération & l'administration.\n\n**2. Comment démarrer son aventure ?**\n> Pour démarrer son aventure, rien de plus simple. Des **coffres magiques** apparaissent dans le général vous permettant de gagner différentes ressources pour démarrer son aventure sur le serveur.\n\n**3. Ou trouver les explications des commandes d'aventure ?**\n> Un salon vous est mis à disposition oû est répertoriée toutes les commandes d'aventure et les explications de celles-ci. ( ${client.channels.cache.get('1066746594873069648')} )`
+                        }
+                    ]
+                }]
+            })
+        } catch(err) {
+            return;
+        }
+    }
 
     }
 }

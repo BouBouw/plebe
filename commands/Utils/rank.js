@@ -1,4 +1,5 @@
-const { ApplicationCommandType, ApplicationCommandOptionType } = require('discord.js')
+const { ApplicationCommandType, ApplicationCommandOptionType, Colors } = require('discord.js');
+const db = require('quick.db');
 
 module.exports = {
     name: 'rank',
@@ -15,9 +16,47 @@ module.exports = {
 execute: async (client, interaction, args) => {
     const target = interaction.options.getMember('membre');
     if(target) {
+        let exp = await db.fetch(`guild_${interaction.guild.id}_exp_${target.user.id}`) || 0;
+        let rank = await db.fetch(`guild_${interaction.guild.id}_rank_${target.user.id}`) || 0;
 
+        interaction.followUp({
+            embeds: [{
+                color: Colors.Green,
+                fields: [
+                    {
+                        name: `Niveau(x) :`,
+                        value: `\`${rank}\``,
+                        inline: true
+                    },
+                    {
+                        name: `Expérience(s) :`,
+                        value: `\`${exp}\``,
+                        inline: true
+                    }
+                ]
+            }]
+        })
     } else {
+        let exp = await db.fetch(`guild_${interaction.guild.id}_exp_${interaction.member.id}`) || 0;
+        let rank = await db.fetch(`guild_${interaction.guild.id}_rank_${interaction.member.id}`) || 0;
 
+        interaction.followUp({
+            embeds: [{
+                color: Colors.Green,
+                fields: [
+                    {
+                        name: `Niveau(x) :`,
+                        value: `\`${rank}\``,
+                        inline: true
+                    },
+                    {
+                        name: `Expérience(s) :`,
+                        value: `\`${exp}\``,
+                        inline: true
+                    }
+                ]
+            }]
+        })
     }
     
     }

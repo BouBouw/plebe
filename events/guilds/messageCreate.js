@@ -1,17 +1,56 @@
+const { ChannelType } = require('discord.js');
 const db = require('quick.db');
 
 module.exports = {
 	name: 'messageCreate',
 	once: false,
 execute: async (message, client) => {
+    if(!message.guild || message.channel.type === ChannelType.DM) return;
+    await countMessage();
+
     await checkBoss();
     await levelSystem();
 
+    async function countMessage() {
+        if(message.author.bot) return;
+
+        const row = db.get(`guild_${message.guild.id}_${message.author.id}.msg_count`)
+        if(!row || row === null) {
+            await db.set(`guild_${message.guild.id}_${message.author.id}.msg_count`, 1)
+        } else {
+            await db.add(`guild_${message.guild.id}_${message.author.id}.msg_count`, 1)
+        }
+    }
+
     async function checkBoss() {
         if(message.author.id === '853261887520505866') {
-            if(message.content.includes('Bonjour') || message.content.includes('Salut') || message.content.includes('slt')) {
+            if(message.content.includes('Bonjour') || message.content.includes('Salut') || message.content.includes('Coucou')) {
                 message.reply({
                     content: `✨ Bonjour maître ${message.author}.`
+                })
+            }
+        }
+
+        if(message.author.id === '829449475268411413') {
+            if(message.content.includes('Bonjour') || message.content.includes('Salut') || message.content.includes('Coucou')) {
+                message.reply({
+                    content: `✨ Bonjour capitaine ${message.author}.`
+                })
+            }
+        }
+
+        if(message.author.id === '871489328331767869') {
+            if(message.content.includes('Bonjour') || message.content.includes('Salut') || message.content.includes('Coucou')) {
+                message.reply({
+                    content: `✨ Bonjour princesse ${message.author}.`
+                })
+            }
+        }
+
+        if(message.author.id === '433286510213726208') {
+            if(message.content.includes('Bonjour') || message.content.includes('Salut') || message.content.includes('Coucou')) {
+                message.reply({
+                    content: `✨ Retourne dans les champs ${message.author}.`
                 })
             }
         }

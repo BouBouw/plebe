@@ -19,12 +19,20 @@ execute: async (interaction, client) => {
 
                 async function giveChestContent() {
                     let gold = Number(interaction.message.embeds[0].data.fields[1].value);
+                    let wood = Number(interaction.message.embeds[0].data.fields[2].value);
+                    let rock = Number(interaction.message.embeds[0].data.fields[3].value);
 
-                    const userInventory = await db.get(`guild_${interaction.guild.id}_${interaction.user.id}.golds`);
+                    const userInventory = await db.get(`guild_${interaction.guild.id}_${interaction.user.id}.ressources`);
                     if(!userInventory || userInventory === null) {
-                        await db.set(`guild_${interaction.guild.id}_${interaction.user.id}.golds`, gold);
+                        await db.set(`guild_${interaction.guild.id}_${interaction.user.id}.ressources`, [`${gold}`, `${wood}`, `${rock}`]);
                     } else {
-                        await db.add(`guild_${interaction.guild.id}_${interaction.user.id}.golds`, gold);
+                        const row = await db.get(`guild_${interaction.guild.id}_${interaction.user.id}.ressources`);
+
+                        row[0] = Math.floor(row[0] + gold);
+                        row[1] = Math.floor(row[1] + wood);
+                        row[2] = Math.floor(row[2] + rock);
+
+                        await db.set(`guild_${interaction.guild.id}_${interaction.user.id}.ressources`, row);
                     }
                 }
                 giveChestContent();
