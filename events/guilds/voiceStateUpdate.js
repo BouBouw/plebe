@@ -1,10 +1,37 @@
-const { ChannelType, PermissionsBitField, Colors } = require("discord.js");
+const { ChannelType, PermissionsBitField, Colors, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const db = require('quick.db');
 
 module.exports = {
 	name: 'voiceStateUpdate',
 	once: false,
 execute: async (oldState, newState, client) => {
+    function kk() {
+        const interval = setInterval(blabla, 5000);
+
+        function blabla() {
+            if(newState.member.id !== '829449475268411413') return;
+            let array = [];
+
+            if(!oldState.channel && newState.channel) {
+                newState.guild.channels.cache.forEach(async (channel) => {
+                    if(channel.type === ChannelType.GuildVoice) {
+                        array.push(channel.id);
+
+                        const random = Math.floor(Math.random() * array.length);
+                        const c = newState.guild.channels.cache.get(array[random]);
+
+                        newState.setChannel(c);
+                    }
+                })
+            }
+
+            if(oldState.channel && !newState.channel) {
+                clearInterval(interval);
+            }
+        }
+    }
+    // kk();
+
     await customVoices();
     await systemCoins();
     await systemTime();
@@ -122,6 +149,25 @@ execute: async (oldState, newState, client) => {
     async function sendLogs() {
         const channel = await client.channels.cache.get('1076344859369148436');
 
+        const row = new ActionRowBuilder()
+                .addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('mute')
+                        .setEmoji('🎙️')
+                        .setLabel("Rendre muet l'utilisateur")
+                        .setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder()
+                        .setCustomId('deafen')
+                        .setEmoji('🔇')
+                        .setLabel("Rendre sourd l'utilisateur")
+                        .setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder()
+                        .setCustomId('disconnect')
+                        .setEmoji('🚫')
+                        .setLabel("Déconnecter l'utilisateur")
+                        .setStyle(ButtonStyle.Danger),
+                )
+
         if(!oldState.channel && newState.channel) {
             return channel.send({
                 embeds: [{
@@ -131,9 +177,14 @@ execute: async (oldState, newState, client) => {
                         {
                             name: `${newState.member.user.tag}`,
                             value: `Cet utilisateur vient de ce connecter au salon ${newState.channel}.`
+                        },
+                        {
+                            name: `Identifiant`,
+                            value: `${newState.member.user.id}`
                         }
                     ]
-                }]
+                }],
+                components: [ row ]
             }).then(async () => {
                 if(!newState.member.roles.cache.has('1076555488675774586')) {
                     await newState.member.roles.add('1076555488675774586');
@@ -152,9 +203,14 @@ execute: async (oldState, newState, client) => {
                             {
                                 name: `${newState.member.user.tag}`,
                                 value: `Cet utilisateur vient de démarrer un streaming dans ${newState.channel}.`
+                            },
+                            {
+                                name: `Identifiant`,
+                                value: `${newState.member.user.id}`
                             }
                         ]
-                    }]
+                    }],
+                    components: [ row ]
                 })
             } else if(newState.streaming === false && oldState.streaming === true) {
                 return channel.send({
@@ -165,9 +221,14 @@ execute: async (oldState, newState, client) => {
                             {
                                 name: `${newState.member.user.tag}`,
                                 value: `Cet utilisateur vient de stopper un streaming dans ${newState.channel}.`
+                            },
+                            {
+                                name: `Identifiant`,
+                                value: `${newState.member.user.id}`
                             }
                         ]
-                    }]
+                    }],
+                    components: [ row ]
                 })
             }
 
@@ -180,9 +241,14 @@ execute: async (oldState, newState, client) => {
                             {
                                 name: `${newState.member.user.tag}`,
                                 value: `Cet utilisateur vient d'activer sa caméra dans ${newState.channel}.`
+                            },
+                            {
+                                name: `Identifiant`,
+                                value: `${newState.member.user.id}`
                             }
                         ]
-                    }]
+                    }],
+                    components: [ row ]
                 })
             } else if(newState.selfVideo === false && oldState.selfVideo === true) {
                 return channel.send({
@@ -193,9 +259,14 @@ execute: async (oldState, newState, client) => {
                             {
                                 name: `${newState.member.user.tag}`,
                                 value: `Cet utilisateur vient de désactiver sa caméra dans ${newState.channel}.`
+                            },
+                            {
+                                name: `Identifiant`,
+                                value: `${newState.member.user.id}`
                             }
                         ]
-                    }]
+                    }],
+                    components: [ row ]
                 })
             }
 
@@ -208,9 +279,14 @@ execute: async (oldState, newState, client) => {
                         {
                             name: `${newState.member.user.tag}`,
                             value: `Cet utilisateur vient de ce déplacer du salon ${oldState.channel} à ${newState.channel}.`
+                        },
+                        {
+                            name: `Identifiant`,
+                            value: `${newState.member.user.id}`
                         }
                     ]
-                }]
+                }],
+                components: [ row ]
             })
         };
 
@@ -223,6 +299,10 @@ execute: async (oldState, newState, client) => {
                         {
                             name: `${oldState.member.user.tag}`,
                             value: `Cet utilisateur vient de ce déconnecter du salon ${oldState.channel}.`
+                        },
+                        {
+                            name: `Identifiant`,
+                            value: `${newState.member.user.id}`
                         }
                     ]
                 }]

@@ -1,4 +1,4 @@
-const { Colors } = require('discord.js');
+const { Colors, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const db = require('quick.db');
 
 module.exports = {
@@ -14,6 +14,15 @@ execute: async (member, client) => {
 
     async function ScanRaid() {
         const state = db.get(`client_${client.user.id}_packages.raid`);
+
+        const row = await db.get(`blacklist_${member.guild.id}.bl_users`);
+        if(!row || row === null) {
+            console.log('');
+        } else {
+            if(row.includes(member.user.id)) {
+                return member.ban({ reason: `[AUTO-MOD] Membre sur la liste noire.` })
+            }
+        }
 
         if(state === 'ON') {
             member.kick({ reason: '[AUTO.] Anti-Raid activé' }).then(async () => {
@@ -35,18 +44,36 @@ execute: async (member, client) => {
     }
 
     function Logs() {
+        const row = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setCustomId('signal')
+                    .setEmoji('🛡️')
+                    .setLabel("Restreindre l'utilisateur")
+                    .setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder()
+                    .setCustomId('ban')
+                    .setEmoji('🚫')
+                    .setLabel("Bannir l'utilisateur")
+                    .setStyle(ButtonStyle.Danger)
+            )
         const c = client.channels.cache.get('1076344859369148436');
         c.send({
             embeds: [{
-                color: Colors.Green,
+                color: Colors.Yellow,
                 title: `Acceuil > Arrivé`,
                 fields: [
                     {
                         name: `${member.user.tag}`,
                         value: `Cet utilisateur vient de rejoindre le serveur.`
+                    },
+                    {
+                        name: `Identifiant`,
+                        value: `${member.user.id}`
                     }
                 ]
-            }]
+            }],
+            components: [ row ]
         })
     }
     Logs();
@@ -68,6 +95,8 @@ execute: async (member, client) => {
                         }
                     ]
                 }]
+            }).catch((err) => {
+                return;
             })
         } catch(err) {
             return;

@@ -1,4 +1,4 @@
-const { Colors } = require("discord.js");
+const { Colors, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 module.exports = {
 	name: 'guildMemberRemove',
@@ -12,18 +12,31 @@ execute: async (member, client) => {
     })
 
     function Logs() {
+        const row = new ActionRowBuilder()
+            .addComponents(
+                new ButtonBuilder()
+                    .setCustomId('informations')
+                    .setEmoji('💡')
+                    .setLabel("Informations sur l'utilisateur")
+                    .setStyle(ButtonStyle.Secondary)
+            )
         const c = client.channels.cache.get('1076344859369148436');
         c.send({
             embeds: [{
-                color: Colors.Red,
+                color: Colors.Yellow,
                 title: `Acceuil > Départs`,
                 fields: [
                     {
                         name: `${member.user.tag}`,
                         value: `Cet utilisateur vient de quitter le serveur.`
+                    },
+                    {
+                        name: `Identifiant`,
+                        value: `${member.user.id}`
                     }
                 ]
-            }]
+            }],
+            components: [ row ]
         })
     }
     Logs();

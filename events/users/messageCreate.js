@@ -9,7 +9,7 @@ execute: async (message, client) => {
     if(!message.guild || message.channel.type === ChannelType.DM) return;
     // if(message.author.id === '853261887520505866') return await db.delete(`guild_${message.guild.id}_${message.author.id}.islands`);
     // console.log(db.get(`guild_${message.guild.id}_${message.author.id}.islands`))
-    await AI();
+    // await AI();
 
     await Adventure();
 

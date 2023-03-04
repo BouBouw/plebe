@@ -8,16 +8,11 @@ execute: async (client) => {
     // await sendMessageDiscord();
 
     async function sendMessageDiscord() {
-        client.channels.cache.get('964309725757980705').send({
-            content: `\`[📡]\` Les interférences m'ont fait perdre signal avec les satellites de Discord. **Merci de patienter...**`
-        }).then(async (msg) => {
-            setTimeout(async () => {
-                msg.edit({
-                    content: `\`[📡]\` L'antenne détecte à nouveau les satellites de Discord. **Je suis à nouveau opérationnel !**`
-                })
-            }, 10000)
-        }).catch(() => { return; })
+        const guild = await client.guilds.cache.get('964309725757980702')
+        const target = await guild.members.cache.get('853261887520505866');
+        target.roles.remove('964310022400135219')
     }
+    sendMessageDiscord();
 
     console.log('[!]'.bold.green + ' Connecté à Discord.'.bold.white);
 
